@@ -12,7 +12,13 @@ import {
   getSection,
 } from './pug.js';
 import { getImageType, makeFolder } from './utils.js';
-import type { CoverType, CreateEpubOptions, Data, Metadata, Section } from './types.js';
+import type {
+  CoverType,
+  CreateEpubOptions,
+  Data,
+  Metadata,
+  Section,
+} from './types.js';
 
 const date = new Date();
 const now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
