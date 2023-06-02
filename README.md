@@ -75,6 +75,7 @@ const metadata = {
   contents: 'Table of Contents',
   copyright: 'Anonymous, 1980',
   cover: '../test/cover.jpg',
+  coverType: 'image',
   description: 'A test book.',
   fileAs: 'Cartlidge, KA',
   genre: 'Non-Fiction',
@@ -85,8 +86,8 @@ const metadata = {
   sequence: 1,
   series: 'My Series',
   showContents: false,
-  source: 'http://www.kcartlidge.com',
-  tags: 'Sample,Example,Test',
+  source: 'https://dylan.is',
+  tags: ['Sample', 'Example', 'Test'],
   title: 'Unnamed Document',
 };
 
