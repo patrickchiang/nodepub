@@ -46,10 +46,4 @@ const getSection = (data: Data, section: Section) => {
   return pugSection({ content, data, section });
 };
 
-export {
-  getContainer,
-  getContents,
-  getCover,
-  getOPF,
-  getSection,
-};
+export { getContainer, getContents, getCover, getOPF, getSection };

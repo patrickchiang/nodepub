@@ -11,11 +11,7 @@ import {
   getOPF,
   getSection,
 } from './pug.js';
-import {
-  forEachAsync,
-  getImageType,
-  makeFolder,
-} from './utils.js';
+import { getImageType, makeFolder } from './utils.js';
 import type { CoverType, Data, Metadata, Section } from './types.js';
 
 const date = new Date();
@@ -132,10 +128,7 @@ const createEpub = (partialMetadata: Metadata) => {
     }
   });
 
-  const css = [
-    defaultCss,
-    metadata.css
-  ].join('\n');
+  const css = [defaultCss, metadata.css].join('\n');
 
   const { cover, showContents } = metadata;
 
@@ -240,16 +233,18 @@ const createEpub = (partialMetadata: Metadata) => {
     });
 
     // Now async map to get the file contents.
-    await forEachAsync(asyncFiles, async (file) => {
-      const read = await readFile(file.content);
-      const loaded = {
-        compress: file.compress,
-        content: read,
-        folder: file.folder,
-        name: file.name,
-      };
-      syncFiles.push(loaded);
-    });
+    await Promise.all(
+      asyncFiles.map(async (file) => {
+        const read = await readFile(file.content);
+        const loaded = {
+          compress: file.compress,
+          content: read,
+          folder: file.folder,
+          name: file.name,
+        };
+        syncFiles.push(loaded);
+      }),
+    );
 
     // Return with the files.
     return syncFiles;

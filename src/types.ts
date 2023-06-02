@@ -41,13 +41,6 @@ type Metadata = BaseMetadata &
     tags: string[];
   }>;
 
-type File = {
-  compress: boolean;
-  content: string;
-  folder: string;
-  name: string;
-};
-
 type Image = {
   base: string;
   originalFilename: string;
@@ -61,4 +54,4 @@ type Data = {
   metadata: Required<Metadata>;
 };
 
-export type { CoverType, Data, File, Metadata, Section };
+export type { CoverType, Data, Metadata, Section };

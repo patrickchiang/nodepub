@@ -1,23 +1,6 @@
 import { mkdir } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 
-import type { CoverType } from './types.js';
-import { coverTypes } from './constants.js';
-
-const isCoverType = (s: string): s is CoverType =>
-  coverTypes.includes(s as CoverType);
-
-// Asynchronous forEach variant.
-const forEachAsync = async <T>(
-  arr: T[],
-  cb: (item: T, index?: number, arg2?: T[]) => Promise<void>,
-) => {
-  for (let index = 0; index < arr.length; index += 1) {
-    // eslint-disable-next-line no-await-in-loop
-    await cb(arr[index], index, arr);
-  }
-};
-
 // Create a folder, throwing an error only if the error is not that
 // the folder already exists. Effectively creates if not found.
 const makeFolder = async (topPath: string) => {
@@ -56,4 +39,4 @@ const getImageType = (filename: string) => {
   }
 };
 
-export { forEachAsync, getImageType, isCoverType, makeFolder };
+export { getImageType, makeFolder };
