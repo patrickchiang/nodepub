@@ -1,3 +1,4 @@
+// TODO: These tests are not valid for @dylanarmstrong/nodepub, fix them
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const { expect, assert } = require('chai');
@@ -5,7 +6,8 @@ const sinon = require('sinon');
 
 const nodepub = require('../src/index');
 
-const lipsum = '<h1>Chapter Title Goes Here</h1><p><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mattis iaculis pharetra. Proin malesuada tortor ut nibh viverra eleifend.</em></p><p>Duis efficitur, arcu vitae viverra consectetur, nisi mi pharetra metus, vel egestas ex velit id leo. Curabitur non tortor nisi. Mauris ornare, tellus vel fermentum suscipit, ligula est eleifend dui, in elementum nunc risus in ipsum. Pellentesque finibus aliquet turpis sed scelerisque. Pellentesque gravida semper elit, ut consequat est mollis sit amet. Nulla facilisi.</p>';
+const lipsum =
+  '<h1>Chapter Title Goes Here</h1><p><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mattis iaculis pharetra. Proin malesuada tortor ut nibh viverra eleifend.</em></p><p>Duis efficitur, arcu vitae viverra consectetur, nisi mi pharetra metus, vel egestas ex velit id leo. Curabitur non tortor nisi. Mauris ornare, tellus vel fermentum suscipit, ligula est eleifend dui, in elementum nunc risus in ipsum. Pellentesque finibus aliquet turpis sed scelerisque. Pellentesque gravida semper elit, ut consequat est mollis sit amet. Nulla facilisi.</p>';
 
 const find = (collection, condition) => {
   const result = [];
@@ -25,7 +27,10 @@ describe('Create EPUB with invalid document metadata', () => {
   it('should throw an exception if no ID', () => {
     expect(() => {
       nodepub.document({
-        title: 'T', author: 'A', genre: 'Non-Fiction', cover: 'cover.png',
+        title: 'T',
+        author: 'A',
+        genre: 'Non-Fiction',
+        cover: 'cover.png',
       });
     }).to.throw(': id');
   });
@@ -33,7 +38,10 @@ describe('Create EPUB with invalid document metadata', () => {
   it('should throw an exception if no Title', () => {
     expect(() => {
       nodepub.document({
-        id: '1', author: 'A', genre: 'Non-Fiction', cover: 'cover.png',
+        id: '1',
+        author: 'A',
+        genre: 'Non-Fiction',
+        cover: 'cover.png',
       });
     }).to.throw(': title');
   });
@@ -41,7 +49,10 @@ describe('Create EPUB with invalid document metadata', () => {
   it('should throw an exception if no Author', () => {
     expect(() => {
       nodepub.document({
-        id: '1', title: 'T', genre: 'Non-Fiction', cover: 'cover.png',
+        id: '1',
+        title: 'T',
+        genre: 'Non-Fiction',
+        cover: 'cover.png',
       });
     }).to.throw(': author');
   });
@@ -49,7 +60,10 @@ describe('Create EPUB with invalid document metadata', () => {
   it('should throw an exception if no Cover', () => {
     expect(() => {
       nodepub.document({
-        id: '1', title: 'T', author: 'A', genre: 'Non-Fiction',
+        id: '1',
+        title: 'T',
+        author: 'A',
+        genre: 'Non-Fiction',
       });
     }).to.throw(': cover');
   });
@@ -100,24 +114,23 @@ describe('Create EPUB with a valid document', () => {
   it('should provide an EPUB file collection when asked', () => {
     epub.addSection('title', lipsum);
     expect(() => {
-      epub.getFilesForEPUB(() => { });
+      epub.getFilesForEPUB(() => {});
     }).not.to.throw();
   });
 
   it('should include an image file asset', (done) => {
     validMetadata.images.push('test/hat.png');
     epub = nodepub.document(validMetadata);
-    epub.getFilesForEPUB()
-      .then((files) => {
-        let found = false;
-        files.forEach((f) => {
-          if (f.name === 'hat.png') {
-            found = true;
-          }
-        });
-        assert(found);
-        done();
+    epub.getFilesForEPUB().then((files) => {
+      let found = false;
+      files.forEach((f) => {
+        if (f.name === 'hat.png') {
+          found = true;
+        }
       });
+      assert(found);
+      done();
+    });
   });
 
   describe('With a generate contents callback provided', () => {
@@ -129,11 +142,10 @@ describe('Create EPUB with a valid document', () => {
     it('should request contents markup when needed', (done) => {
       epub = nodepub.document(validMetadata, contentsCallback);
       epub.addSection('Dummy Section.', lipsum);
-      epub.getFilesForEPUB()
-        .then(() => {
-          expect(providedContents).to.equal(true);
-          done();
-        });
+      epub.getFilesForEPUB().then(() => {
+        expect(providedContents).to.equal(true);
+        done();
+      });
     });
   });
 
@@ -154,7 +166,10 @@ describe('Create EPUB with a valid document', () => {
       const files = await epub.getFilesForEPUB();
 
       const metadata = find(files, (f) => f.name === 'toc.xhtml');
-      assert(metadata.length === 0, 'Expected not to find a table of contents (toc)');
+      assert(
+        metadata.length === 0,
+        'Expected not to find a table of contents (toc)',
+      );
     });
   });
 
@@ -185,7 +200,10 @@ describe('Create EPUB with a valid document', () => {
       });
 
       it('should have all other files compressed', () => {
-        const metadata = find(files, (f) => f.name !== 'mimetype' && f.compress === false);
+        const metadata = find(
+          files,
+          (f) => f.name !== 'mimetype' && f.compress === false,
+        );
         assert(metadata.length === 0);
       });
 
@@ -200,8 +218,8 @@ describe('Create EPUB with a valid document', () => {
       let stubWrite;
 
       beforeEach(() => {
-        stubMkdir = sinon.stub(fsPromises, 'mkdir').resolves(() => { });
-        stubWrite = sinon.stub(fsPromises, 'writeFile').resolves(() => { });
+        stubMkdir = sinon.stub(fsPromises, 'mkdir').resolves(() => {});
+        stubWrite = sinon.stub(fsPromises, 'writeFile').resolves(() => {});
       });
       afterEach(() => {
         stubWrite.restore();
@@ -283,8 +301,12 @@ describe('Create EPUB with a valid document', () => {
               opfContent = f.content;
             }
           });
-          const copyrightPageInOPF = opfContent.indexOf("<itemref idref='s1' />");
-          const contentsPageInOPF = opfContent.indexOf("<itemref idref='toc'/>");
+          const copyrightPageInOPF = opfContent.indexOf(
+            "<itemref idref='s1' />",
+          );
+          const contentsPageInOPF = opfContent.indexOf(
+            "<itemref idref='toc'/>",
+          );
           expect(copyrightPageInOPF).to.be.lessThan(contentsPageInOPF);
         });
       });

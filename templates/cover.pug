@@ -1,0 +1,35 @@
+doctype xml
+html(
+  xml:lang='en',
+  xmlns:epub='http://www.idpf.org/2007/ops',
+  xmlns='http://www.w3.org/1999/xhtml'
+)
+  head
+    title= data.metadata.title
+    link(
+      href='css/ebook.css',
+      rel='stylesheet',
+      type='text/css'
+    )
+    meta(
+      charset='utf-8'
+    )
+
+    if data.metadata.coverType === 'image'
+      style(
+        type='text/css'
+      ).
+        body { margin: 0; padding: 0; text-align: center; }
+        img { margin: 0; padding: 0; height: 100%; }
+        .cover { margin: 0; padding: 0; font-size: 1px; }
+
+  body
+    if data.metadata.coverType === 'image'
+      div(class='cover')
+        img(
+          alt='Cover',
+          src=`images/${data.coverImage.base}`,
+          style='height: 100%; width: 100%;'
+        )
+    else
+      div!= data.coverText

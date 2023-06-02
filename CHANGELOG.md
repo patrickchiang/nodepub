@@ -1,4 +1,12 @@
 # CHANGE LOG
+## 2023-07-02 - v4.0.0
+- Generates EPUB v3.3
+- Project converted to Typescript
+- Support non-image text covers
+- Pug for templates instead of string concatenation
+- Forked by [@dylanarmstrong](https://github.com/dylanarmstrong)
+- **BREAKING**: Now exports single `createEpub` method.
+- **BREAKING**: Sections / CSS must be in options passed to `createEpub`.
 
 ## 2022-03-03 - v3.0.8
 

@@ -1,12 +1,8 @@
-![Mocha](https://img.shields.io/badge/mocha-passing-success)
-![Wallaby.js](https://img.shields.io/badge/wallaby.js-configured-success.svg)
 ![IDPF](https://img.shields.io/badge/idpf-valid-success)
 
 # Nodepub
 
-**Deprecated. Stable and working but will receive no further updates. Consider a fork.**
-
-Create valid EPUB 2 ebooks with metadata, contents, cover, and images.
+Create valid EPUB 3.3 ebooks with metadata, contents, cover, and images.
 
 *This is a utility module, not a user-facing one. In other words it is assumed that the caller has already validated the inputs. Only basic sanity checks are performed.*
 
@@ -30,41 +26,43 @@ Create valid EPUB 2 ebooks with metadata, contents, cover, and images.
 - [A Full Example](#a-full-example)
 - [Breaking changes over v2](#breaking-changes-over-v2)
 
-
 ## About Nodepub
 
-Nodepub is a **Node** module which can be used to create **EPUB 2** documents.
+Nodepub is a **Node** module which can be used to create **EPUB 3** documents.
 
 - Files pass the [IDPF online validator](http://validator.idpf.org)
 - Files meet Sigil's preflight checks
-- Files open fine in iBooks, Adobe Digital Editions, and Calibre
-- Files open fine with the Kobo H20 ereader
-- Files are fine as *KindleGen* input
-- PNG/JPEG cover images
+- Files open fine in iBooks and Calibre
+- Files open fine with the Kindle ereader
+- PNG/JPEG cover images (or text)
 - Inline images within the EPUB
   - See [Including Images](#including-images) for supported formats
 - Custom CSS can be provided
-- Optionally generate your own contents page
 - Front matter before the contents page
 - Exclude sections from auto contents page and metadata-based navigation
-- OEBPS and other 'expected' subfolders within the EPUB
+- OPS and other 'expected' subfolders within the EPUB
 
-Development is done against Node v15.6.0 since v3.0.0 (February 2021).
+Development is done against Node v16.20.0 since v4.0.0 (June 2023).
 *Node v10.3 or later* should work fine.
+
+## About @dylanarmstrong/nodepub
+
+This is a continuation of the work by [kartlidge](https://github.com/kcartlidge/nodepub)
+and is a nearly complete rewrite.
 
 ## Installation
 
-It's an [npm package](https://www.npmjs.com/package/nodepub).
+It's an [npm package](https://www.npmjs.com/package/@dylanarmstrong/nodepub).
 To install it:
 
 ``` sh
-npm i nodepub
+npm install @dylanarmstrong/nodepub
 ```
 
 Then import it for use:
 
 ``` javascript
-var nodepub = require('nodepub');
+import { createEpub } from '@dylanarmstrong/nodepub';
 ```
 
 ## Creating an EPUB
@@ -80,31 +78,31 @@ var nodepub = require('nodepub');
 The first task is to declare the metadata which describes your EPUB. You use that metadata when creating a new document.
 
 ``` javascript
-var epub = nodepub.document(metadata);
+const epub = createEpub(metadata);
 ```
 
 #### Example Metadata
 
 ``` javascript
-var metadata = {
-  id: '278-123456789',
-  cover: '../test/cover.jpg',
-  title: 'Unnamed Document',
-  series: 'My Series',
-  sequence: 1,
+const metadata = {
   author: 'KA Cartlidge',
+  contents: 'Table of Contents',
+  copyright: 'Anonymous, 1980',
+  cover: '../test/cover.jpg',
+  description: 'A test book.',
   fileAs: 'Cartlidge, KA',
   genre: 'Non-Fiction',
-  tags: 'Sample,Example,Test',
-  copyright: 'Anonymous, 1980',
-  publisher: 'My Fake Publisher',
-  published: '2000-12-31',
+  id: '278-123456789',
+  images: ['../test/hat.png'],
   language: 'en',
-  description: 'A test book.',
+  published: '2000-12-31',
+  publisher: 'My Fake Publisher',
+  sequence: 1,
+  series: 'My Series',
   showContents: false,
-  contents: 'Table of Contents',
   source: 'http://www.kcartlidge.com',
-  images: ['../test/hat.png']
+  tags: 'Sample,Example,Test',
+  title: 'Unnamed Document',
 };
 ```
 
@@ -327,3 +325,8 @@ This runs in [the `example` folder](./example) using the code in [`example/examp
 
 - [You can view the change log here.](./CHANGELOG.md)
 - [Developers of Nodepub itself can see some helpful information here.](./DEVELOPERS.md)
+
+## Previous Work
+
+This repo was forked and modified from it's [original location](https://github.com/kcartlidge/nodepub)
+and combined with `pug` templating taken from this [fork](https://github.com/fholzer/nodepub).
