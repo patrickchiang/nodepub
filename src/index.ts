@@ -12,7 +12,7 @@ import {
   getSection,
 } from './pug.js';
 import { getImageType, makeFolder } from './utils.js';
-import type { CoverType, Data, Metadata, Section } from './types.js';
+import type { CoverType, CreateEpubOptions, Data, Metadata, Section } from './types.js';
 
 const date = new Date();
 const now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -28,12 +28,10 @@ const defaultMetadata: Required<Metadata> = {
   fileAs: '',
   genre: '',
   id: '',
-  images: [],
   language: 'en',
   modified: date.toISOString().replace(/\.[0-9]{3}Z/, 'Z'),
   published: now,
   publisher: '',
-  sections: [],
   sequence: 0,
   series: '',
   showContents: true,
@@ -73,12 +71,10 @@ const isRequiredMetadata = (
     'fileAs',
     'genre',
     'id',
-    'images',
     'language',
     'modified',
     'published',
     'publisher',
-    'sections',
     'sequence',
     'series',
     'showContents',
@@ -102,7 +98,12 @@ const isRequiredSection = (section: Section): section is Required<Section> => {
 };
 
 // Construct a new document.
-const createEpub = (partialMetadata: Metadata) => {
+const createEpub = ({
+  images = [],
+  css: overrideCss = '',
+  metadata: partialMetadata,
+  sections,
+}: CreateEpubOptions) => {
   if (partialMetadata === null) {
     throw new Error('Missing metadata');
   }
@@ -113,9 +114,9 @@ const createEpub = (partialMetadata: Metadata) => {
     throw new Error('Unable to form required metadata');
   }
 
-  const sections: Required<Section>[] = [];
+  const requiredSections: Required<Section>[] = [];
 
-  metadata.sections.forEach((section, index) => {
+  sections.forEach((section, index) => {
     const sectionIndex = index + 1;
     const filename = `${section.filename || `s${sectionIndex}`}.xhtml`;
 
@@ -124,15 +125,15 @@ const createEpub = (partialMetadata: Metadata) => {
 
     const requiredSection = defaults(section, defaultSection);
     if (isRequiredSection(requiredSection)) {
-      sections.push(requiredSection);
+      requiredSections.push(requiredSection);
     }
   });
 
-  const css = [defaultCss, metadata.css].join('\n');
+  const css = [defaultCss, overrideCss].join('\n');
 
   const { cover, showContents } = metadata;
 
-  const images = metadata.images.map((image) => ({
+  const mappedImages = images.map((image) => ({
     base: basename(image),
     originalFilename: image,
     type: getImageType(image),
@@ -147,8 +148,9 @@ const createEpub = (partialMetadata: Metadata) => {
   const data: Data = {
     coverImage,
     coverText: cover,
-    images,
+    images: mappedImages,
     metadata,
+    sections: requiredSections,
   };
 
   // Gets the files needed for the EPUB, as an array of objects.
@@ -194,8 +196,8 @@ const createEpub = (partialMetadata: Metadata) => {
       name: 'ebook.css',
     });
 
-    for (let i = 0, len = sections.length; i < len; i += 1) {
-      const section = sections[i];
+    for (let i = 0, len = requiredSections.length; i < len; i += 1) {
+      const section = requiredSections[i];
       syncFiles.push({
         compress: true,
         content: getSection(data, section),
@@ -223,7 +225,7 @@ const createEpub = (partialMetadata: Metadata) => {
       name: coverFilename,
     });
 
-    images.forEach((image) => {
+    mappedImages.forEach((image) => {
       asyncFiles.push({
         compress: true,
         content: image.originalFilename,
@@ -294,4 +296,4 @@ const createEpub = (partialMetadata: Metadata) => {
 
 /* eslint-disable import/no-unused-modules */
 export { createEpub };
-export type { CoverType, Metadata, Section };
+export type { CoverType, CreateEpubOptions, Metadata, Section };

@@ -114,7 +114,7 @@ package(
       media-type='text/css'
     )
 
-    each section in data.metadata.sections
+    each section in data.sections
       item(
         href=`content/${section.filename}`,
         id=`s${section.index}`,
@@ -141,7 +141,7 @@ package(
       linear='yes'
     )
 
-    each section in data.metadata.sections
+    each section in data.sections
       if section.isFrontMatter
         itemref(
           idref=`s${section.index}`
@@ -152,7 +152,7 @@ package(
         idref='toc'
       )
 
-    each section in data.metadata.sections
+    each section in data.sections
       unless section.isFrontMatter
         itemref(
           idref=`s${section.index}`

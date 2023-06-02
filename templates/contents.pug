@@ -28,7 +28,7 @@ html(
         xmlns:epub='http://www.idpf.org/2007/ops'
       )
         ol
-          each section in data.metadata.sections
+          each section in data.sections
               unless section.excludeFromContents
                 li(
                   id=`toc-${section.filename}`

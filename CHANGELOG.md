@@ -6,7 +6,7 @@
 - Pug for templates instead of string concatenation
 - Forked by [@dylanarmstrong](https://github.com/dylanarmstrong)
 - **BREAKING**: Now exports single `createEpub` method.
-- **BREAKING**: Sections / CSS must be in options passed to `createEpub`.
+- **BREAKING**: Sections / Images / CSS must be in options passed to `createEpub`.
 
 ## 2022-03-03 - v3.0.8
 

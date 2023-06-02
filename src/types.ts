@@ -28,12 +28,10 @@ type Metadata = BaseMetadata &
     description: string;
     fileAs: string;
     genre: string;
-    images: string[];
     language: string;
     modified: string;
     published: string;
     publisher: string;
-    sections: Section[];
     sequence: number;
     series: string;
     showContents: boolean;
@@ -52,6 +50,15 @@ type Data = {
   coverText: string;
   images: Image[];
   metadata: Required<Metadata>;
+  sections: Required<Section>[];
 };
 
-export type { CoverType, Data, Metadata, Section };
+type CreateEpubOptions = {
+  metadata: Metadata;
+  sections: Section[];
+} & Partial<{
+  css: string;
+  images: string[];
+}>;
+
+export type { CoverType, CreateEpubOptions, Data, Metadata, Section };
