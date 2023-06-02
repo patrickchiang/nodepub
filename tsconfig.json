@@ -16,11 +16,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./lib",
-    "paths": {
-      "cheerio": [
-        "./node_modules/cheerio/lib/index.d.ts"
-      ]
-    },
     "removeComments": true,
     "resolveJsonModule": true,
     "strict": true,
