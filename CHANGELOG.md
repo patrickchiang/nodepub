@@ -1,4 +1,7 @@
 # CHANGE LOG
+## 2023-07-03 - v4.0.1
+- Publishing over unpublished broken v4.0.0 version
+
 ## 2023-07-03 - v4.0.0
 - Generates EPUB v3.3
 - Project converted to Typescript
