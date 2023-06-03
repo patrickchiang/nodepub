@@ -1,6 +1,8 @@
 import { mkdir } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 
+import type { Options, Metadata, Section } from './types.js';
+
 // Create a folder, throwing an error only if the error is not that
 // the folder already exists. Effectively creates if not found.
 const makeFolder = async (topPath: string) => {
@@ -39,4 +41,52 @@ const getImageType = (filename: string) => {
   }
 };
 
-export { getImageType, makeFolder };
+const isRequiredOptions = (options: Options): options is Required<Options> => {
+  const fields = ['coverType', 'showContents'] as const;
+  return fields.every((field) => typeof options[field] !== 'undefined');
+};
+
+const isRequiredMetadata = (
+  metadata: Metadata,
+): metadata is Required<Metadata> => {
+  const fields = [
+    'author',
+    'contents',
+    'copyright',
+    'cover',
+    'description',
+    'fileAs',
+    'genre',
+    'id',
+    'language',
+    'modified',
+    'published',
+    'publisher',
+    'sequence',
+    'series',
+    'source',
+    'tags',
+    'title',
+  ] as const;
+  return fields.every((field) => typeof metadata[field] !== 'undefined');
+};
+
+const isRequiredSection = (section: Section): section is Required<Section> => {
+  const fields = [
+    'content',
+    'excludeFromContents',
+    'filename',
+    'index',
+    'isFrontMatter',
+    'title',
+  ] as const;
+  return fields.every((field) => typeof section[field] !== 'undefined');
+};
+
+export {
+  isRequiredMetadata,
+  isRequiredOptions,
+  isRequiredSection,
+  getImageType,
+  makeFolder,
+};

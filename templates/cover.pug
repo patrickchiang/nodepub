@@ -15,7 +15,7 @@ html(
       charset='utf-8'
     )
 
-    if data.metadata.coverType === 'image'
+    if data.options.coverType === 'image'
       style(
         type='text/css'
       ).
@@ -24,12 +24,12 @@ html(
         .cover { margin: 0; padding: 0; font-size: 1px; }
 
   body
-    if data.metadata.coverType === 'image'
+    if data.options.coverType === 'image'
       div(class='cover')
         img(
           alt='Cover',
-          src=`images/${data.coverImage.base}`,
+          src=`images/${data.cover.image.base}`,
           style='height: 100%; width: 100%;'
         )
     else
-      div!= data.coverText
+      div!= data.cover.text

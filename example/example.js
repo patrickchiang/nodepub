@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { createEpub } from '../lib/index.js';
+import Epub from '../lib/index.js';
 
 const css = `body { font-family:Verdana,Arial,Sans-Serif; font-size:11pt; }
 #title,#title h1,#title h2,#title h3 { text-align:center; }
@@ -60,22 +59,6 @@ for (let i = 0; i < 3; i += 1) {
   lipsum += lipsum;
 }
 
-// Optional override to replace auto-generated contents page.
-// If not required, just drop it from the 'var epub=' call below.
-const generateContentsPage = (links) => {
-  let contents = '<h1>Chapters</h1>';
-  links.forEach((link) => {
-    // Omit all but the main pages.
-    if (link.itemType === 'main') {
-      if (link.title === 'More Books to Read') {
-        contents += '<div> &nbsp;</div>';
-      }
-      contents += `<div><a href='${link.link}'>${link.title}</a></div>`;
-    }
-  });
-  return contents;
-};
-
 const sections = [
   {
     content:
@@ -122,36 +105,46 @@ const metadata = {
   author: 'Anonymous',
   contents: 'Chapters',
   copyright: 'Anonymous, 1980',
-  cover: 'test/test-cover.png',
-  coverType: 'image',
-  css,
+  cover: 'example/cover.png',
   description: 'A test book.',
   fileAs: 'Anonymous',
   genre: 'Non-Fiction',
   id: '278-123456789',
-  images: ['test/hat.png'],
   language: 'en',
   published: '2000-12-31',
   publisher: 'My Fake Publisher',
   sections,
   sequence: 1,
   series: 'My Series',
-  showContents: true,
   source: 'http://www.kcartlidge.com',
   tags: ['Sample', 'Example', 'Test'],
   title: 'Unnamed Document',
 };
 
+const options = {
+  coverType: 'image',
+  showContents: true,
+};
+
+const images = ['example/hat.png'];
+
 // Set up the EPUB basics.
-const epub = createEpub(metadata, generateContentsPage);
+const epub = new Epub({
+  css,
+  images,
+  metadata,
+  options,
+  sections,
+});
 
 // Generate the result.
 (async () => {
   try {
+    // eslint-disable-next-line no-console
     console.log('Generating a stand-alone EPUB.');
-    await epub.write('example', 'example');
+    await epub.write('example', 'example.epub');
   } catch (e) {
-    console.log('ERROR');
-    console.log(e);
+    // eslint-disable-next-line no-console
+    console.error(e);
   }
 })();

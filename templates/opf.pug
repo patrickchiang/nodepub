@@ -100,11 +100,11 @@ package(
       id='cover',
       media-type='application/xhtml+xml'
     )
-    if data.metadata.coverType === 'image'
+    if data.options.coverType === 'image'
       item(
-        href=`images/${data.coverImage.base}`,
+        href=`images/${data.cover.image.base}`,
         id='cover-image',
-        media-type=data.coverImage.type,
+        media-type=data.cover.image.type,
         properties='cover-image'
       )
 
@@ -147,7 +147,7 @@ package(
           idref=`s${section.index}`
         )
 
-    if data.metadata.showContents
+    if data.options.showContents
       itemref(
         idref='toc'
       )
@@ -158,7 +158,7 @@ package(
           idref=`s${section.index}`
         )
 
-  if data.metadata.showContents
+  if data.options.showContents
     guide
       reference(
         href='content/toc.xhtml',

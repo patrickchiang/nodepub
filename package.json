@@ -7,24 +7,27 @@
     "@dylanarmstrong/eslint-config": "^0.4.0",
     "archiver": "^5.3.1",
     "defaults": "^2.0.1",
-    "html-entities": "^2.3.3",
     "pug": "^3.0.2"
   },
   "description": "Create valid EPUB (v2) ebooks with metadata, contents and cover image.",
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
     "@types/archiver": "^5.3.2",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.2.5",
     "@types/pug": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
-    "chai": "4.3.7",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
+    "jest": "^29.5.0",
     "prettier": "^2.8.8",
-    "sinon": "15.1.0",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": ">16.0.0"
   },
   "eslintConfig": {
     "extends": [
@@ -33,6 +36,7 @@
     ],
     "rules": {}
   },
+  "exports": "./lib/index.js",
   "files": [
     "./lib/",
     "./templates/"
@@ -43,7 +47,6 @@
     "ebook"
   ],
   "license": "MIT",
-  "exports": "./lib/index.js",
   "name": "@dylanarmstrong/nodepub",
   "prettier": {
     "singleQuote": true,
@@ -60,10 +63,10 @@
     "lint": "pnpm run prettier && pnpm run lint-src && pnpm run lint-example && pnpm run lint-test",
     "lint-example": "eslint example/ --fix",
     "lint-src": "eslint src/ --fix",
-    "lint-test": "eslint test/ --fix",
-    "prettier": "prettier --write --ignore-unknown src/ test/ example/",
-    "test": "mocha"
+    "lint-test": "eslint __tests__/ --fix",
+    "prettier": "prettier --write --ignore-unknown src/ __tests__/ example/",
+    "test": "pnpm run build && node --experimental-vm-modules ./node_modules/jest/bin/jest"
   },
   "type": "module",
-  "version": "1.0.0"
+  "version": "4.0.0"
 }

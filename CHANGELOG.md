@@ -1,12 +1,16 @@
 # CHANGE LOG
-## 2023-07-02 - v4.0.0
+## 2023-07-03 - v4.0.0
 - Generates EPUB v3.3
 - Project converted to Typescript
 - Support non-image text covers
 - Pug for templates instead of string concatenation
 - Forked by [@dylanarmstrong](https://github.com/dylanarmstrong)
-- **BREAKING**: Now exports single `createEpub` method.
-- **BREAKING**: Sections / Images / CSS must be in options passed to `createEpub`.
+- Tests changed from mocha -> jest
+- **BREAKING**: Now exports default class `Epub`.
+- **BREAKING**: Only available as an ES Module
+- **BREAKING**: Removed ability to write individual files
+- **BREAKING**: Removed generate TOC callback
+- **BREAKING**: Sections / Images / CSS / Options must be in options passed to `Epub` constructor.
 
 ## 2022-03-03 - v3.0.8
 

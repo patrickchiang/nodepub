@@ -1,6 +1,4 @@
-import { coverTypes } from './constants.js';
-
-type CoverType = (typeof coverTypes)[number];
+type CoverType = 'image' | 'text';
 
 type Section = {
   content: string;
@@ -23,8 +21,6 @@ type Metadata = BaseMetadata &
   Partial<{
     contents: string;
     copyright: string;
-    coverType: CoverType;
-    css: string;
     description: string;
     fileAs: string;
     genre: string;
@@ -34,7 +30,6 @@ type Metadata = BaseMetadata &
     publisher: string;
     sequence: number;
     series: string;
-    showContents: boolean;
     source: string;
     tags: string[];
   }>;
@@ -45,20 +40,30 @@ type Image = {
   type: string;
 };
 
+type Options = Partial<{
+  coverType: CoverType;
+  showContents: boolean;
+}>;
+
 type Data = {
-  coverImage: Image;
-  coverText: string;
+  cover: {
+    image: Image;
+    text: string;
+  };
+  css: string;
   images: Image[];
   metadata: Required<Metadata>;
+  options: Required<Options>;
   sections: Required<Section>[];
 };
 
-type CreateEpubOptions = {
+type Document = {
   metadata: Metadata;
   sections: Section[];
 } & Partial<{
   css: string;
   images: string[];
+  options: Options;
 }>;
 
-export type { CoverType, CreateEpubOptions, Data, Metadata, Section };
+export type { Data, Document, Metadata, Options, Section };

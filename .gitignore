@@ -1,4 +1,4 @@
 .*
-example/example-EPUB-files/
+coverage/
 lib/
 node_modules/

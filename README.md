@@ -2,7 +2,7 @@
 
 # Nodepub
 
-Create valid EPUB 3.3 ebooks with metadata, contents, cover, and images.
+Create valid Epub 3.3 ebooks with metadata, contents, cover, and images.
 
 *This is a utility module, not a user-facing one. In other words it is assumed that the caller has already validated the inputs. Only basic sanity checks are performed.*
 
@@ -10,7 +10,7 @@ Create valid EPUB 3.3 ebooks with metadata, contents, cover, and images.
 
 - [About Nodepub](#about-nodepub)
 - [Installation](#installation)
-- [Creating an EPUB](#creating-an-epub)
+- [Creating an Epub](#creating-an-epub)
   - [Setting the Metadata](#setting-the-metadata)
     - [Example Metadata](#example-metadata)
   - [Adding Contents](#adding-contents)
@@ -24,25 +24,25 @@ Create valid EPUB 3.3 ebooks with metadata, contents, cover, and images.
 
 ## About Nodepub
 
-Nodepub is a **Node** module which can be used to create **EPUB 3** documents.
+Nodepub is a **Node** module which can be used to create **Epub 3** documents.
 
 - Files pass validation via [epubcheck](https://github.com/w3c/epubcheck)
 - Files open fine in iBooks and Calibre
 - PNG/JPEG cover images (or text)
-- Inline images within the EPUB
+- Inline images within the Epub
   - See [Including Images](#including-images) for supported formats
 - Custom CSS can be provided
 - Front matter before the contents page
 - Exclude sections from auto contents page and metadata-based navigation
-- OPS and other 'expected' subfolders within the EPUB
+- OPS and other 'expected' subfolders within the Epub
 
-Development is done against Node v16.20.0 since v1.0.0 (June 2023).
-*Node v10.3 or later* should work fine.
+Development is done against Node v16.20.0 since v4.0.0 (June 2023).
+*Node v16.0 or later* should work fine.
 
 ## About @dylanarmstrong/nodepub
 
 This is a continuation of the work by [kartlidge](https://github.com/kcartlidge/nodepub)
-and is a nearly complete rewrite targeting EPUB v3.3.
+and is a complete rewrite targeting Epub v3.3.
 
 ## Installation
 
@@ -58,45 +58,46 @@ pnpm add @dylanarmstrong/nodepub
 Then import it for use:
 
 ``` javascript
-import { createEpub } from '@dylanarmstrong/nodepub';
+import Epub from '@dylanarmstrong/nodepub';
 ```
 
-## Creating an EPUB
+## Creating an Epub
 
-- Documents consist of *metadata*, *sections*, and *images*
-  - Metadata is provided in the form of an object with various properties detailing the book
-  - Sections are chunks of HTML where each represent a chapter, front/back matter, or similar
-  - Images are inlined image files that can appear within the body of the EPUB
+- Documents consist of *metadata*, *sections*, *images*, *css*, and *options*
+  - `metadata` is provided in the form of an object with various properties detailing the book
+  - `sections` are chunks of HTML where each represent a chapter, front/back matter, or similar
+  - `images` are inlined image files that can appear within the body of the Epub
     - The cover is a special image which is declared within the metadata
+  - `css` is for appending to the book `css`
+  - `options` are for general options that control some formatting of the book
 
 ``` javascript
 const metadata = {
-  author: 'KA Cartlidge',
-  contents: 'Table of Contents',
-  copyright: 'Anonymous, 1980',
-  cover: '../test/cover.jpg',
-  coverType: 'image',
+  author: 'Dylan',
+  contents: 'Chapters',
+  copyright: 'Dylan, 2023',
+  cover: 'example/cover.png',
   description: 'A test book.',
-  fileAs: 'Cartlidge, KA',
+  fileAs: 'Dylan',
   genre: 'Non-Fiction',
-  id: '278-123456789',
+  id: '1234',
   language: 'en',
-  published: '2000-12-31',
+  published: '1992-06-17',
   publisher: 'My Fake Publisher',
   sequence: 1,
   series: 'My Series',
-  showContents: false,
   source: 'https://dylan.is',
   tags: ['Sample', 'Example', 'Test'],
-  title: 'Unnamed Document',
+  title: 'My First Book',
 };
 
 const images = ['../test/hat.png'];
 
 const sections = [
   {
-    content: 'This is a copyrighted booked',
+    content: 'This is a libre book with no copyright',
     excludeFromContents: true,
+    filename: 'copyright-page',
     isFrontMatter: true,
     title: 'Copyright',
   },
@@ -119,12 +120,18 @@ const css = `
   }
 `;
 
+const options = {
+  showContents: true,
+  coverType: 'image', // Possible types are 'image' and 'text'
+};
+
 const epub = createEpub({
   metadata,
   sections,
   // Optional
   css,
   images,
+  options,
 });
 ```
 
@@ -132,12 +139,12 @@ const epub = createEpub({
 
 - `cover` should be the filename of an image - recommendation is 600x800, 600x900, or similar
 - `fileAs` is the sortable version of the `author`, which is usually by last name
-- `genre` becomes the main subject in the final EPUB
+- `genre` becomes the main subject in the final Epub
 - `language` is the short *ISO* language name (`en`, `fr`, `de` etc)
 - `published` is the data published - note the *year-month-day* format
 - `series` and `sequence` are not recognised by many readers (it sets the properties used by *Calibre*)
 - `showContents` (default is `true`) lets you suppress the contents page
-- `tags` also become subjects in the final EPUB
+- `tags` also become subjects in the final Epub
 
 ### Regarding Sections
 
@@ -147,7 +154,7 @@ const epub = createEpub({
 | content (required)  | HTML body text                   |         |
 | excludeFromContents | Hide from contents/navigation    | `false` |
 | isFrontMatter       | Place before the contents page   | `false` |
-| overrideFilename    | Section filename inside the EPUB |         |
+| overrideFilename    | Section filename inside the Epub |         |
 
 ### Including Images
 
@@ -160,7 +167,7 @@ const images = ['../test/hat.png'];
 This part of the metadata is an array of filenames which locate the source images on your system.
 (I strongly recommend you use relative paths in order to allow for documents being produced on different systems having different folder layouts.)
 
-These images are automatically added into the EPUB when it is generated. They always go in an `images` folder internally. As they all go into the same folder they *should have unique filenames*.
+These images are automatically added into the Epub when it is generated. They always go in an `images` folder internally. As they all go into the same folder they *should have unique filenames*.
 
 To include the images in your content the HTML should refer to this internal folder rather than the original source folder, so for example `<img src="../images/hat.png" />` in the above example.
 
@@ -183,12 +190,34 @@ const epub = createEpub({
 });
 ```
 
+### Advanced Options
+
+You can also modify the book with advanced options.
+
+| PARAMETER           | PURPOSE                           | DEFAULT   |
+| ------------------- | --------------------------------- | --------- |
+| showContents        | Whether or not to include the TOC | `true`    |
+| coverType           | Is the cover 'image' or 'text'?   | `'image'` |
+
+```javascript
+const options = {
+  showContents: true, // Whether or not to include the TOC page (default: true)
+  coverType: 'image', // Possible types are 'image' and 'text'  (default: 'image')
+};
+
+const epub = createEpub({
+  metadata,
+  options,
+  sections,
+});
+```
+
 ### Generating Output
 
-Having defined your document generating an EPUB from it can be as simple or complex as you like.
+Having defined your document generating an Epub is as simple as:
 
 ``` javascript
-await epub.write(folder, filenameWithoutExtention);
+await epub.write(folder, filename);
 ```
 
 ## A Full Example
@@ -196,15 +225,14 @@ await epub.write(folder, filenameWithoutExtention);
 In the top folder (the one containing the `package.json` file) run the following:
 
 ``` javascript
-npm run example
+pnpm run example
 ```
 
-This runs in [the `example` folder](./example) using the code in [`example/example.js`](./example/example.js) to generate a final EPUB. It will also create a subfolder containing the raw files used to produce that EPUB (omitted from source control).
+This runs in [the `example` folder](./example) using the code in [`example/example.js`](./example/example.js) to generate a final Epub.
 
 ## Changelog
 
 - [You can view the change log here.](./CHANGELOG.md)
-- [Developers of Nodepub itself can see some helpful information here.](./DEVELOPERS.md)
 
 ## Previous Work
 

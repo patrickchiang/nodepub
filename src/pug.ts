@@ -18,20 +18,15 @@ const getContainer = () => pugContainer();
 const getContents = (data: Data) => pugContents({ data });
 
 const processTextContent = (content: string) =>
-  content
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .join('\n')
-    .replace(/&nbsp;/g, '&#xa0;')
-    .replace(/&copy;/g, '&#xa9;');
+  content.replace(/&nbsp;/g, '&#xa0;').replace(/&copy;/g, '&#xa9;');
 
 // Provide the contents of the cover HTML enclosure.
 const getCover = (data: Data) => {
-  const { coverType } = data.metadata;
+  const { coverType } = data.options;
 
   let coverText = data.metadata.cover;
   if (coverType === 'text') {
-    coverText = processTextContent(data.coverText);
+    coverText = processTextContent(data.cover.text);
   }
 
   return pugCover({ coverText, data });
