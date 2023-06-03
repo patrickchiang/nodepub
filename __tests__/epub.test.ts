@@ -55,7 +55,8 @@ describe('epub', () => {
 
   const css = 'body { margin: 5px; }';
 
-  const images: string[] = ['example/hat.png'];
+  // Checks that duplicate is removed
+  const images: string[] = ['example/hat.png', 'example/hat.png'];
 
   it('Forms Valid Internal Data Structure', () => {
     const epub = new Epub({

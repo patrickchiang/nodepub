@@ -66,7 +66,7 @@ class Epub {
 
     const { cover } = metadata;
 
-    const mappedImages = images.map((image) => ({
+    const mappedImages = Array.from(new Set(images)).map((image) => ({
       base: basename(image),
       originalFilename: image,
       type: getImageType(image),

@@ -1,4 +1,7 @@
 # CHANGE LOG
+## 2023-07-03 - v4.0.2
+- Do not add duplicate images
+
 ## 2023-07-03 - v4.0.1
 - Publishing over unpublished broken v4.0.0 version
 
