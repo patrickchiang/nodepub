@@ -1,4 +1,7 @@
 # CHANGE LOG
+## 2023-07-04 - v4.1.2
+- Publish with types
+
 ## 2023-07-04 - v4.1.1
 - Allow overriding all `Resource` properties
 - Cast `defaults` to `Required<T>` instead of having messy type guards

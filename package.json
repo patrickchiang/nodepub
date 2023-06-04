@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@dylanarmstrong/eslint-config": "^0.4.0",
-    "@dylanarmstrong/tsconfig": "^0.0.1",
+    "@dylanarmstrong/tsconfig": "^0.0.2",
     "archiver": "^5.3.1",
     "defaults": "^2.0.1",
     "mime": "^3.0.0",
@@ -74,5 +74,5 @@
     "test": "pnpm run build && node --experimental-vm-modules ./node_modules/jest/bin/jest"
   },
   "type": "module",
-  "version": "4.1.1"
+  "version": "4.1.2"
 }
