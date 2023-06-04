@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 import type { Options, Metadata, Section } from './types.js';
 
 const defaultOptions: Required<Options> = {
@@ -13,13 +15,13 @@ const modified = date.toISOString().replace(/\.[0-9]{3}Z/, 'Z');
 
 const defaultMetadata: Required<Metadata> = {
   author: '',
-  contents: 'Contents',
+  contents: 'Table of Contents',
   copyright: '',
-  cover: '',
+  cover: 'Cover',
   description: '',
   fileAs: '',
   genre: '',
-  id: '',
+  id: `uuid:${uuid()}`,
   language: 'en',
   modified,
   published,

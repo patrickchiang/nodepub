@@ -6,23 +6,31 @@ jest.unstable_mockModule('node:fs/promises', () => ({
 
 const { mkdir } = await import('node:fs/promises');
 
-const { getImageType, makeFolder } = await import('../lib/utils.js');
+const { addResourceDetails, makeFolder } = await import('../lib/utils.js');
 
 describe('utils', () => {
-  describe('getImageType', () => {
+  describe('addResourceDetails', () => {
     const cases = [
-      ['image.gif', 'image/gif'],
-      ['image.jpeg', 'image/jpeg'],
-      ['image.jpg', 'image/jpeg'],
-      ['image.png', 'image/png'],
-      ['image.svg', 'image/svg+xml'],
-      ['image.tif', 'image/tiff'],
-      ['image.tiff', 'image/tiff'],
-      ['some-file', ''],
+      ['folder/image.gif', 'image/gif'],
+      ['folder/image.jpeg', 'image/jpeg'],
+      ['folder/image.jpg', 'image/jpeg'],
+      ['folder/image.png', 'image/png'],
+      ['folder/image.svg', 'image/svg+xml'],
+      ['folder/image.tif', 'image/tiff'],
+      ['folder/image.tiff', 'image/tiff'],
+      ['folder/some-file', ''],
     ];
 
+    const data = Buffer.from([0]);
+
     it.concurrent.each(cases)('%s is of type %s', (image, exp) =>
-      expect(getImageType(image)).toBe(exp),
+      expect(addResourceDetails({ data, name: image })).toStrictEqual({
+        base: image.slice('folder/'.length),
+        data,
+        name: image,
+        properties: '',
+        type: exp,
+      }),
     );
   });
 

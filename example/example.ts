@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import Epub from '../lib/index.js';
 
 const css = `body { font-family:Verdana,Arial,Sans-Serif; font-size:11pt; }
@@ -7,9 +9,9 @@ h2 { margin-bottom:2em; }
 p { text-indent: 0; }
 p+p { text-indent: 0.75em; }`;
 
-const copyright = `<h1>[[TITLE]]</h1>
-<h2>[[AUTHOR]]</h2>
-<h3>&copy; [[COPYRIGHT]]</h3>
+const copyright = `<h1>Unnamed Document</h1>
+<h2>Anonymous</h2>
+<h3>&copy; Anonymous, 1980</h3>
 <p>
   All rights reserved.
 </p>
@@ -26,7 +28,7 @@ const copyright = `<h1>[[TITLE]]</h1>
 `;
 
 const more = `<h1>More Books to Read</h1>
-<h2>Thanks for reading <em>[[TITLE]]</em>.</h2>
+<h2>Thanks for reading <em>Unnamed Document</em>.</h2>
 <p>
   I hope you enjoyed the book, but however you felt please consider leaving a
   review where you purchased it and help other readers discover it.
@@ -48,21 +50,33 @@ const about = `<h1>About the Author</h1>
   Oh, and here's a picture of a hat:
 </p>
 <p>
-  <img src="../images/hat.png" alt="A hat." />
+  <img src="../resources/hat.png" alt="A hat." />
 </p>
 `;
 
 // Dummy text (lorem ipsum).
-let lipsum =
-  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mattis iaculis pharetra. Proin malesuada tortor ut nibh viverra eleifend.</p><p>Duis efficitur, arcu vitae viverra consectetur, nisi mi pharetra metus, vel egestas ex velit id leo. Curabitur non tortor nisi. Mauris ornare, tellus vel fermentum suscipit, ligula est eleifend dui, in elementum nunc risus in ipsum. Pellentesque finibus aliquet turpis sed scelerisque. Pellentesque gravida semper elit, ut consequat est mollis sit amet. Nulla facilisi.</p>';
+const lipsum: string[] = [];
 for (let i = 0; i < 3; i += 1) {
-  lipsum += lipsum;
+  lipsum.push(`
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+      mattis iaculis pharetra. Proin malesuada tortor ut nibh viverra eleifend.
+    </p>
+    <p>
+      Duis efficitur, arcu vitae viverra consectetur, nisi mi pharetra metus,
+      vel egestas ex velit id leo. Curabitur non tortor nisi. Mauris ornare,
+      tellus vel fermentum suscipit, ligula est eleifend dui, in elementum
+      nunc risus in ipsum. Pellentesque finibus aliquet turpis sed scelerisque.
+      Pellentesque gravida semper elit, ut consequat est mollis sit amet. Nulla
+      facilisi.
+    </p>
+  `);
 }
 
 const sections = [
   {
     content:
-      "<div id='title'><h1>[[TITLE]]</h1><h2>Book <strong>[[SEQUENCE]]</strong> of <em>[[SERIES]]</em></h2><h3>[[AUTHOR]]</h3><p> &nbsp;</p><p>&copy; [[COPYRIGHT]]</p></div>",
+      "<div id='title'><h1>Unnamed Document</h1><h2>Book <strong>1</strong> of <em>My Series</em></h2><h3>Anonymous</h3><p> &nbsp;</p><p>&copy; Anonymous, 1980</p></div>",
     excludeFromContents: true,
     isFrontMatter: true,
     title: 'Title Page',
@@ -74,20 +88,26 @@ const sections = [
     title: 'Copyright',
   },
   {
-    content: `<h1>One</h1>${lipsum}<p><a href='s3.xhtml'>A test internal link</a>.</p>`,
+    content: `<h1>One</h1>${lipsum.join(
+      '',
+    )}<p><a href='s3.xhtml'>A test internal link</a>.</p>`,
     title: 'Chapter 1',
   },
   {
-    content: `<h1>Two</h1>${lipsum}`,
+    content: `<h1>Two</h1>${lipsum.join('')}`,
     title: 'Chapter 2',
   },
   {
-    content: `<h1>Two (A)</h1><p><strong>This chapter does not appear in the contents.</strong></p>${lipsum}`,
+    content: `<h1>Two (A)</h1><p><strong>This chapter does not appear in the contents.</strong></p>${lipsum.join(
+      '',
+    )}`,
     excludeFromContents: true,
     title: 'Chapter 2a',
   },
   {
-    content: `<h1>Three</h1><p>Here is a sample list.</p><ul><li>Sample list item one.</li><li>Sample list item two.</li><li>Sample list item three.</li></ul>${lipsum}`,
+    content: `<h1>Three</h1><p>Here is a sample list.</p><ul><li>Sample list item one.</li><li>Sample list item two.</li><li>Sample list item three.</li></ul>${lipsum.join(
+      '',
+    )}`,
     title: 'Chapter 3',
   },
   {
@@ -105,7 +125,10 @@ const metadata = {
   author: 'Anonymous',
   contents: 'Chapters',
   copyright: 'Anonymous, 1980',
-  cover: 'example/cover.png',
+  cover: {
+    data: Buffer.from(await readFile('example/cover.png')),
+    name: 'cover.png',
+  },
   description: 'A test book.',
   fileAs: 'Anonymous',
   genre: 'Non-Fiction',
@@ -122,18 +145,23 @@ const metadata = {
 };
 
 const options = {
-  coverType: 'image',
+  coverType: 'image' as const,
   showContents: true,
 };
 
-const images = ['example/hat.png'];
+const resources = [
+  {
+    data: Buffer.from(await readFile('example/hat.png')),
+    name: 'example/hat.png',
+  },
+];
 
 // Set up the EPUB basics.
 const epub = new Epub({
   css,
-  images,
   metadata,
   options,
+  resources,
   sections,
 });
 

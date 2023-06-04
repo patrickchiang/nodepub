@@ -1,8 +1,6 @@
 import defaults from 'defaults';
 import zip from 'archiver';
-import { basename } from 'node:path';
 import { createWriteStream } from 'node:fs';
-import { readFile } from 'node:fs/promises';
 
 import type { Data, Document, Section } from './types.js';
 import {
@@ -19,11 +17,12 @@ import {
   getSection,
 } from './pug.js';
 import {
+  addResourceDetails,
   isRequiredMetadata,
   isRequiredOptions,
   isRequiredSection,
-  getImageType,
   makeFolder,
+  uniqueResources,
 } from './utils.js';
 
 class Epub {
@@ -31,9 +30,9 @@ class Epub {
 
   constructor({
     css: overrideCss = '',
-    images = [],
     metadata: partialMetadata,
     options: partialOptions = {},
+    resources = [],
     sections: partialSections,
   }: Document) {
     const metadata = defaults(partialMetadata, defaultMetadata);
@@ -62,140 +61,108 @@ class Epub {
       }
     });
 
-    const css = [defaultCss, overrideCss].join('\n');
-
     const { cover } = metadata;
 
-    const mappedImages = Array.from(new Set(images)).map((image) => ({
-      base: basename(image),
-      originalFilename: image,
-      type: getImageType(image),
-    }));
+    const css = [defaultCss, overrideCss].join('\n');
 
-    const coverImage = {
-      base: basename(cover),
-      originalFilename: cover,
-      type: getImageType(cover),
-    };
+    const dataCover =
+      typeof cover === 'string'
+        ? cover
+        : addResourceDetails({ ...cover, properties: 'cover-image' });
+    const initialResources = typeof dataCover === 'string' ? [] : [dataCover];
 
     this.data = {
-      cover: {
-        image: coverImage,
-        text: cover,
-      },
+      cover: dataCover,
       css,
-      images: mappedImages,
       metadata,
       options,
+      resources: resources
+        .reduce(uniqueResources, initialResources)
+        .map(addResourceDetails),
       sections,
     };
   }
 
   // Gets the files needed for the EPUB, as an array of objects.
   // Note that 'compress:false' MUST be respected for valid EPUB files.
-  async getFiles() {
-    const syncFiles = [];
-    const asyncFiles = [];
+  getFiles() {
+    const { data } = this;
+
+    const files = [];
 
     // Required files.
-    syncFiles.push({
+    files.push({
       compress: false,
       content: 'application/epub+zip',
       folder: '',
       name: 'mimetype',
     });
 
-    syncFiles.push({
+    files.push({
       compress: true,
       content: getContainer(),
       folder: 'META-INF',
       name: 'container.xml',
     });
 
-    syncFiles.push({
+    files.push({
       compress: true,
-      content: getOPF(this.data),
+      content: getOPF(data),
       folder: 'OPS',
       name: 'ebook.opf',
     });
 
-    syncFiles.push({
+    files.push({
       compress: true,
-      content: getCover(this.data),
+      content: getCover(data),
       folder: 'OPS',
       name: 'cover.xhtml',
     });
 
     // Optional files.
-    syncFiles.push({
+    files.push({
       compress: true,
-      content: this.data.css,
+      content: data.css,
       folder: 'OPS/css',
       name: 'ebook.css',
     });
 
-    const { sections } = this.data;
+    const { sections } = data;
     for (let i = 0, len = sections.length; i < len; i += 1) {
       const section = sections[i];
-      syncFiles.push({
+      files.push({
         compress: true,
-        content: getSection(this.data, section),
+        content: getSection(data, section),
         folder: 'OPS/content',
         name: section.filename,
       });
     }
 
     // Table of contents markup.
-    if (this.data.options.showContents) {
-      syncFiles.push({
+    if (data.options.showContents) {
+      files.push({
         compress: true,
-        content: getContents(this.data),
+        content: getContents(data),
         folder: 'OPS/content',
         name: 'toc.xhtml',
       });
     }
 
-    if (this.data.options.coverType === 'image') {
-      const { cover } = this.data.metadata;
-      // Extra images - add filename into content property and prepare for async handling.
-      const coverFilename = basename(cover);
-      asyncFiles.push({
+    data.resources.forEach((resource) => {
+      files.push({
         compress: true,
-        content: cover,
-        folder: 'OPS/images',
-        name: coverFilename,
-      });
-    }
-
-    this.data.images.forEach((image) => {
-      asyncFiles.push({
-        compress: true,
-        content: image.originalFilename,
-        folder: 'OPS/images',
-        name: image.base,
+        content: resource.data,
+        folder: 'OPS/resources',
+        name: resource.base,
       });
     });
 
-    // Now async map to get the file contents.
-    await Promise.all(
-      asyncFiles.map(async (file) => {
-        const read = await readFile(file.content);
-        const loaded = {
-          compress: file.compress,
-          content: read,
-          folder: file.folder,
-          name: file.name,
-        };
-        syncFiles.push(loaded);
-      }),
-    );
-
     // Return with the files.
-    return syncFiles;
+    return files;
   }
 
   async write(folder: string, filename: string) {
-    const files = await this.getFiles();
+    const files = this.getFiles();
 
     const fullFilename = filename.endsWith('.epub')
       ? filename

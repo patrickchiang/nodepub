@@ -1,6 +1,16 @@
 # CHANGE LOG
+## 2023-07-04 - v4.1.0
+- Use `mime` for handling mime types, to support mp3 and such
+- Example converted to typescript
+- Pug files now prettified, so they can be read in an editor easier
+- ID now defaults to uuid
+- **FIX**: Output language correctly
+- **FIX**: Consider cover as a duplicate image as well
+- **BREAKING**: Resources must now be passed with `{ data: Buffer; name: string }`
+- **BREAKING**: `images` -> `resources` in constructor options
+
 ## 2023-07-03 - v4.0.2
-- Do not add duplicate images
+- **FIX**: Do not add duplicate images
 
 ## 2023-07-03 - v4.0.1
 - Publishing over unpublished broken v4.0.0 version

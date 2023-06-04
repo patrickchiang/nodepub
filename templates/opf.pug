@@ -1,11 +1,30 @@
-doctype xml
+mixin resources(resources)
+  each resource, i in resources
+    if resource.properties
+      item(
+        href=`resources/${resource.base}`,
+        id=`img${i}`,
+        media-type=resource.type
+        properties=resource.properties
+      )
+    else
+      item(
+        href=`resources/${resource.base}`,
+        id=`img${i}`,
+        media-type=resource.type
+      )
 
+-
+  let showContents =data.options.showContents;
+  let sections =data.sections;
+
+doctype xml
 package(
-  xmlns='http://www.idpf.org/2007/opf',
-  version='3.0',
-  xml:lang='en',
-  unique-identifier='pub-id',
   prefix='cc: http://creativecommons.org/ns#'
+  unique-identifier='pub-id',
+  version='3.0',
+  xml:lang=data.metadata.language,
+  xmlns='http://www.idpf.org/2007/opf',
 )
   metadata(
     xmlns:dc='http://purl.org/dc/elements/1.1/'
@@ -33,51 +52,51 @@ package(
     meta(
       property='title-type',
       refines='#title'
-    )= 'main'
+    )='main'
 
-    dc:language= data.metadata.language
+    dc:language=data.metadata.language
     dc:identifier(
       id='pub-id'
-    )= data.metadata.id
+    )=data.metadata.id
 
     if data.metadata.author
       dc:creator(
         id='creator'
-      )= data.metadata.author
+      )=data.metadata.author
       meta(
         property='role',
         refines='#creator'
-      )= 'aut'
+      )='aut'
 
     if data.metadata.author && data.metadata.fileAs
       meta(
         property='file-as',
         refines='#creator'
-      )= data.metadata.fileAs
+      )=data.metadata.fileAs
 
-    dc:date= data.metadata.published
+    dc:date=data.metadata.published
 
     if data.metadata.description
-      dc:description= data.metadata.description
+      dc:description=data.metadata.description
 
     if data.metadata.publisher
-      dc:publisher= data.metadata.publisher
+      dc:publisher=data.metadata.publisher
 
     if data.metadata.copyright
-      dc:rights= data.metadata.copyright
+      dc:rights=data.metadata.copyright
 
     if data.metadata.source
-      dc:source= data.metadata.source
+      dc:source=data.metadata.source
 
     if data.metadata.genre
-      dc:subject= data.metadata.genre
+      dc:subject=data.metadata.genre
 
     meta(
       property='dcterms:modified'
-    )= data.metadata.modified
+    )=data.metadata.modified
 
     each tag in data.metadata.tags
-      dc:subject= tag
+      dc:subject=tag
 
     if data.metadata.series && data.metadata.sequence
       meta(
@@ -100,13 +119,6 @@ package(
       id='cover',
       media-type='application/xhtml+xml'
     )
-    if data.options.coverType === 'image'
-      item(
-        href=`images/${data.cover.image.base}`,
-        id='cover-image',
-        media-type=data.cover.image.type,
-        properties='cover-image'
-      )
 
     item(
       href='css/ebook.css',
@@ -114,7 +126,7 @@ package(
       media-type='text/css'
     )
 
-    each section in data.sections
+    each section in sections
       item(
         href=`content/${section.filename}`,
         id=`s${section.index}`,
@@ -128,12 +140,7 @@ package(
       properties='nav'
     )
 
-    each image, i in data.images
-      item(
-        href=`images/${image.base}`,
-        id=`img${i}`,
-        media-type=`${image.type}`
-      )
+    +resources(data.resources)
 
   spine
     itemref(
@@ -141,24 +148,24 @@ package(
       linear='yes'
     )
 
-    each section in data.sections
+    each section in sections
       if section.isFrontMatter
         itemref(
           idref=`s${section.index}`
         )
 
-    if data.options.showContents
+    if showContents
       itemref(
         idref='toc'
       )
 
-    each section in data.sections
+    each section in sections
       unless section.isFrontMatter
         itemref(
           idref=`s${section.index}`
         )
 
-  if data.options.showContents
+  if showContents
     guide
       reference(
         href='content/toc.xhtml',

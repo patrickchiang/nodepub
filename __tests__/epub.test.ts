@@ -1,14 +1,5 @@
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('node:fs/promises', () => ({
-  mkdir: jest.fn(),
-  readFile: jest
-    .fn()
-    .mockImplementation(() => Promise.resolve(Buffer.from('0'))),
-}));
-
-const { readFile } = await import('node:fs/promises');
-
 jest.useFakeTimers().setSystemTime(new Date('2023-06-03 00:00:00'));
 
 const Epub = (await import('../lib/epub.js')).default;
@@ -38,7 +29,10 @@ describe('epub', () => {
     author: 'Dylan',
     contents: 'Chapters',
     copyright: 'Dylan, 2023',
-    cover: 'example/cover.png',
+    cover: {
+      data: Buffer.from([0]),
+      name: 'example/cover.png',
+    },
     description: 'A test book.',
     fileAs: 'Dylan',
     genre: 'Non-Fiction',
@@ -56,24 +50,32 @@ describe('epub', () => {
   const css = 'body { margin: 5px; }';
 
   // Checks that duplicate is removed
-  const images: string[] = ['example/hat.png', 'example/hat.png'];
+  const resources = [
+    {
+      data: Buffer.from([0]),
+      name: 'example/hat.png',
+    },
+    {
+      data: Buffer.from([0]),
+      name: 'example/hat.png',
+    },
+  ];
 
   it('Forms Valid Internal Data Structure', () => {
     const epub = new Epub({
       css,
-      images,
       metadata,
+      resources,
       sections,
     });
 
     expect(epub.data).toStrictEqual({
       cover: {
-        image: {
-          base: 'cover.png',
-          originalFilename: 'example/cover.png',
-          type: 'image/png',
-        },
-        text: 'example/cover.png',
+        base: 'cover.png',
+        data: expect.any(Buffer),
+        name: 'example/cover.png',
+        properties: 'cover-image',
+        type: 'image/png',
       },
       css: `
 #toc ol {
@@ -83,18 +85,14 @@ describe('epub', () => {
 }
 
 body { margin: 5px; }`,
-      images: [
-        {
-          base: 'hat.png',
-          originalFilename: 'example/hat.png',
-          type: 'image/png',
-        },
-      ],
       metadata: {
         author: 'Dylan',
         contents: 'Chapters',
         copyright: 'Dylan, 2023',
-        cover: 'example/cover.png',
+        cover: {
+          data: expect.any(Buffer),
+          name: 'example/cover.png',
+        },
         description: 'A test book.',
         fileAs: 'Dylan',
         genre: 'Non-Fiction',
@@ -113,6 +111,22 @@ body { margin: 5px; }`,
         coverType: 'image',
         showContents: true,
       },
+      resources: [
+        {
+          base: 'cover.png',
+          data: expect.any(Buffer),
+          name: 'example/cover.png',
+          properties: 'cover-image',
+          type: 'image/png',
+        },
+        {
+          base: 'hat.png',
+          data: expect.any(Buffer),
+          name: 'example/hat.png',
+          properties: '',
+          type: 'image/png',
+        },
+      ],
       sections: [
         {
           content: 'Title Page for My First Book',
@@ -146,13 +160,12 @@ body { margin: 5px; }`,
   it('Gets List of Files for EPUB', async () => {
     const epub = new Epub({
       css,
-      images,
       metadata,
+      resources,
       sections,
     });
 
-    const files = await epub.getFiles();
-    expect(readFile).toBeCalledWith('example/cover.png');
+    const files = epub.getFiles();
 
     expect(files).toStrictEqual([
       {
@@ -212,15 +225,35 @@ body { margin: 5px; }`,
       {
         compress: true,
         content: expect.any(Buffer),
-        folder: 'OPS/images',
+        folder: 'OPS/resources',
         name: 'cover.png',
       },
       {
         compress: true,
         content: expect.any(Buffer),
-        folder: 'OPS/images',
+        folder: 'OPS/resources',
         name: 'hat.png',
       },
     ]);
+  });
+
+  it('Handles text cover correctly', () => {
+    const epub = new Epub({
+      css,
+      metadata: { ...metadata, cover: '<h1>Cover</h1>' },
+      options: {
+        coverType: 'text' as const,
+      },
+      resources,
+      sections,
+    });
+
+    expect(epub.data.options.coverType).toBe('text');
+    expect(epub.data.cover).toBe('<h1>Cover</h1>');
+    expect(epub.data.metadata.cover).toBe('<h1>Cover</h1>');
+    const files = epub.getFiles();
+    expect(
+      files.filter(({ folder }) => folder === 'OPS/resources').length,
+    ).toBe(1);
   });
 });

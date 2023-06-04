@@ -29,8 +29,8 @@ Nodepub is a **Node** module which can be used to create **Epub 3** documents.
 - Files pass validation via [epubcheck](https://github.com/w3c/epubcheck)
 - Files open fine in iBooks and Calibre
 - PNG/JPEG cover images (or text)
-- Inline images within the Epub
-  - See [Including Images](#including-images) for supported formats
+- Inline resources within the Epub
+  - See [Including Resources](#including-resources) for supported formats
 - Custom CSS can be provided
 - Front matter before the contents page
 - Exclude sections from auto contents page and metadata-based navigation
@@ -63,11 +63,11 @@ import Epub from '@dylanarmstrong/nodepub';
 
 ## Creating an Epub
 
-- Documents consist of *metadata*, *sections*, *images*, *css*, and *options*
+- Documents consist of *metadata*, *sections*, *resources*, *css*, and *options*
   - `metadata` is provided in the form of an object with various properties detailing the book
   - `sections` are chunks of HTML where each represent a chapter, front/back matter, or similar
-  - `images` are inlined image files that can appear within the body of the Epub
-    - The cover is a special image which is declared within the metadata
+  - `resources` are inlined image / mp3 files that can appear within the body of the Epub
+    - The cover is a special resource which is declared within the metadata
   - `css` is for appending to the book `css`
   - `options` are for general options that control some formatting of the book
 
@@ -91,7 +91,7 @@ const metadata = {
   title: 'My First Book',
 };
 
-const images = ['../test/hat.png'];
+const resources = ['../example/hat.png'];
 
 const sections = [
   {
@@ -125,13 +125,13 @@ const options = {
   coverType: 'image', // Possible types are 'image' and 'text'
 };
 
-const epub = createEpub({
+const epub = new Epub({
   metadata,
   sections,
   // Optional
   css,
-  images,
   options,
+  resources,
 });
 ```
 
@@ -156,22 +156,22 @@ const epub = createEpub({
 | isFrontMatter       | Place before the contents page   | `false` |
 | overrideFilename    | Section filename inside the Epub |         |
 
-### Including Images
+### Including Resources
+
+Resources include images and mp3s.
 
 In the example above:
 
 ``` javascript
-const images = ['../test/hat.png'];
+const resources = ['../example/hat.png'];
 ```
 
-This part of the metadata is an array of filenames which locate the source images on your system.
+This part of the metadata is an array of filenames which locate the source resources on your system.
 (I strongly recommend you use relative paths in order to allow for documents being produced on different systems having different folder layouts.)
 
-These images are automatically added into the Epub when it is generated. They always go in an `images` folder internally. As they all go into the same folder they *should have unique filenames*.
+These resources are automatically added into the Epub when it is generated. They always go in an `resources` folder internally. As they all go into the same folder they *should have unique filenames*.
 
-To include the images in your content the HTML should refer to this internal folder rather than the original source folder, so for example `<img src="../images/hat.png" />` in the above example.
-
-- Accepted image types are `.svg`, `.png`, `.jpg`/`.jpeg`, `.gif`, and `.tif`/`.tiff`.
+To include the resources in your content the HTML should refer to this internal folder rather than the original source folder, so for example `<img src="../resources/hat.png" />` in the above example.
 
 ### Changing the Styling
 
@@ -182,9 +182,9 @@ Modify the `css` parameter of `createEpub`.
 
 ```javascript
 const css = `p { text-indent: 0; } p+p { text-indent: 0.75em; }`);
-const epub = createEpub({
+const epub = new Epub({
   css,
-  images,
+  resources,
   metadata,
   sections,
 });
@@ -234,7 +234,8 @@ This runs in [the `example` folder](./example) using the code in [`example/examp
 
 - [You can view the change log here.](./CHANGELOG.md)
 
-## Previous Work
+## Previous Work & Credits
 
-This repo was forked and modified from it's [original location](https://github.com/kcartlidge/nodepub)
-and combined with `pug` templating taken from this [fork](https://github.com/fholzer/nodepub).
+* [Original](https://github.com/kcartlidge/nodepub)
+* [Original Fork with Pug Templates](https://github.com/fholzer/nodepub).
+* [Nodepub3 with MP3](https://gitee.com/taolt/nodepub3/tree/master)

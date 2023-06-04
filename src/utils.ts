@@ -1,7 +1,8 @@
+import mime from 'mime';
 import { mkdir } from 'node:fs/promises';
-import { extname, resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 
-import type { Options, Metadata, Section } from './types.js';
+import type { Options, Metadata, Resource, Section } from './types.js';
 
 // Create a folder, throwing an error only if the error is not that
 // the folder already exists. Effectively creates if not found.
@@ -14,31 +15,29 @@ const makeFolder = async (topPath: string) => {
   });
 };
 
-// Get the image mimetype based on the file name.
-const getImageType = (filename: string) => {
-  const imageExt = extname(filename).toLowerCase();
-  switch (imageExt) {
-    case '.svg':
-      return 'image/svg+xml';
-
-    case '.jpg':
-    case '.jpeg':
-      return 'image/jpeg';
-
-    case '.gif':
-      return 'image/gif';
-
-    case '.tif':
-    case '.tiff':
-      return 'image/tiff';
-
-    case '.png':
-      return 'image/png';
-
-    // This will cause epub validation error
-    default:
-      return '';
+const uniqueResources = (acc: Resource[], cur: Resource) => {
+  if (!acc.some(({ name }) => name === cur.name)) {
+    acc.push(cur);
   }
+  return acc;
+};
+
+// Checks if a type already has been added manually by user
+const hasType = <T>(o: T): o is T & { type: string } =>
+  Object.hasOwnProperty.call(o, 'type') &&
+  typeof (o as { type: unknown }).type === 'string';
+
+const addResourceDetails = (resource: Resource): Required<Resource> => {
+  const type = hasType(resource)
+    ? resource.type
+    : mime.getType(resource.name) || '';
+
+  return {
+    ...resource,
+    base: basename(resource.name),
+    properties: resource.properties || '',
+    type,
+  };
 };
 
 const isRequiredOptions = (options: Options): options is Required<Options> => {
@@ -84,9 +83,10 @@ const isRequiredSection = (section: Section): section is Required<Section> => {
 };
 
 export {
+  addResourceDetails,
   isRequiredMetadata,
   isRequiredOptions,
   isRequiredSection,
-  getImageType,
   makeFolder,
+  uniqueResources,
 };
