@@ -126,7 +126,7 @@ const metadata = {
   contents: 'Chapters',
   copyright: 'Anonymous, 1980',
   cover: {
-    data: Buffer.from(await readFile('example/cover.png')),
+    data: await readFile('example/cover.png'),
     name: 'cover.png',
   },
   description: 'A test book.',
@@ -151,7 +151,7 @@ const options = {
 
 const resources = [
   {
-    data: Buffer.from(await readFile('example/hat.png')),
+    data: await readFile('example/hat.png'),
     name: 'example/hat.png',
   },
 ];

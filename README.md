@@ -91,7 +91,10 @@ const metadata = {
   title: 'My First Book',
 };
 
-const resources = ['../example/hat.png'];
+const resources = [{
+  data: await readFile('../example/hat.png'),
+  name: '../example/hat.png',
+}];
 
 const sections = [
   {
@@ -163,13 +166,15 @@ Resources include images and mp3s.
 In the example above:
 
 ``` javascript
-const resources = ['../example/hat.png'];
+const resources = [{
+  data: await readFile('../example/hat.png'),
+  name: '../example/hat.png',
+}];
 ```
 
-This part of the metadata is an array of filenames which locate the source resources on your system.
-(I strongly recommend you use relative paths in order to allow for documents being produced on different systems having different folder layouts.)
+This part of the metadata is an array of objects which provide a data buffer and the name of the file.
 
-These resources are automatically added into the Epub when it is generated. They always go in an `resources` folder internally. As they all go into the same folder they *should have unique filenames*.
+These resources are automatically added into the Epub when it is generated. They always go in an `resources` folder internally. As they all go into the same folder they *should have unique filenames*. Duplicates are removed.
 
 To include the resources in your content the HTML should refer to this internal folder rather than the original source folder, so for example `<img src="../resources/hat.png" />` in the above example.
 
