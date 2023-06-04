@@ -1,4 +1,10 @@
 # CHANGE LOG
+## 2023-07-04 - v4.1.1
+- Allow overriding all `Resource` properties
+- Cast `defaults` to `Required<T>` instead of having messy type guards
+  - This is hopefully temporary, pending this PR: https://github.com/sindresorhus/node-defaults/pull/6
+- Switch to shared tsconfig `@dylanarmstrong/tsconfig`
+
 ## 2023-07-04 - v4.1.0
 - Use `mime` for handling mime types, to support mp3 and such
 - Example converted to typescript

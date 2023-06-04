@@ -2,7 +2,7 @@ import defaults from 'defaults';
 import zip from 'archiver';
 import { createWriteStream } from 'node:fs';
 
-import type { Data, Document, Section } from './types.js';
+import type { Data, Document, Metadata, Options, Section } from './types.js';
 import {
   defaultCss,
   defaultMetadata,
@@ -16,14 +16,7 @@ import {
   getOPF,
   getSection,
 } from './pug.js';
-import {
-  addResourceDetails,
-  isRequiredMetadata,
-  isRequiredOptions,
-  isRequiredSection,
-  makeFolder,
-  uniqueResources,
-} from './utils.js';
+import { addResourceDetails, makeFolder, uniqueResources } from './utils.js';
 
 class Epub {
   data: Data;
@@ -35,20 +28,21 @@ class Epub {
     resources = [],
     sections: partialSections,
   }: Document) {
-    const metadata = defaults(partialMetadata, defaultMetadata);
-    const options = defaults(partialOptions, defaultOptions);
-
-    if (!isRequiredMetadata(metadata) || !isRequiredOptions(options)) {
-      // This shouldn't be able to be reached, it's just here to force typescript to handle
-      // Defaults like they're Required<T> now.
-      throw new Error(
-        'Internal error with forming required metadata and options, unable to proceed.',
-      );
-    }
+    const metadata = defaults(
+      partialMetadata,
+      defaultMetadata,
+    ) as Required<Metadata>;
+    const options = defaults(
+      partialOptions,
+      defaultOptions,
+    ) as Required<Options>;
 
     const sections: Required<Section>[] = [];
     partialSections.forEach((section, index) => {
-      const requiredSection = defaults(section, defaultSection);
+      const requiredSection = defaults(
+        section,
+        defaultSection,
+      ) as Required<Section>;
 
       const sectionIndex = index + 1;
       const filename = `${section.filename || `s${sectionIndex}`}.xhtml`;
@@ -56,9 +50,7 @@ class Epub {
       requiredSection.index = sectionIndex;
       requiredSection.filename = filename;
 
-      if (isRequiredSection(requiredSection)) {
-        sections.push(requiredSection);
-      }
+      sections.push(requiredSection);
     });
 
     const { cover } = metadata;

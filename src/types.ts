@@ -14,11 +14,11 @@ type Resource = {
   name: string;
   data: Buffer;
 } & Partial<{
-  // This is base of file, and cannot be overriden
+  // This is base of file, do not override
   base: string;
   // Any properties to apply to this resource, i.e. cover-image
   properties: string;
-  // This is the mime type, and can be overriden by user
+  // This is the mime type
   type: string;
 }>;
 

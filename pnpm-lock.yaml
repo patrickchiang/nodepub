@@ -8,6 +8,9 @@ dependencies:
   '@dylanarmstrong/eslint-config':
     specifier: ^0.4.0
     version: 0.4.0(eslint@8.42.0)
+  '@dylanarmstrong/tsconfig':
+    specifier: ^0.0.1
+    version: 0.0.1
   archiver:
     specifier: ^5.3.1
     version: 5.3.1
@@ -421,6 +424,11 @@ packages:
     dependencies:
       chalk: 4.1.2
       eslint: 8.42.0
+    dev: false
+
+  /@dylanarmstrong/tsconfig@0.0.1:
+    resolution: {integrity: sha512-CChMOYYSlj37cggPDZWjvpCsfiEzzhrNwDY4MQ2kOe4sCojSjL3wkwZDQed6YeCVlGlx2GqdHgpWCcbbKpUDTg==}
+    engines: {node: '>16.0.0'}
     dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.42.0):
