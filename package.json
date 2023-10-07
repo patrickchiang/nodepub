@@ -1,6 +1,7 @@
 {
   "author": "Dylan Armstrong <dylan@dylan.is>",
   "main": "./lib/index.js",
+  "prepare": "npm run build",
   "bugs": {
     "url": "https://github.com/dylanarmstrong/nodepub/issues"
   },
