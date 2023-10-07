@@ -1,7 +1,6 @@
 {
   "author": "Dylan Armstrong <dylan@dylan.is>",
   "main": "./lib/index.js",
-  "prepare": "npm run build",
   "bugs": {
     "url": "https://github.com/dylanarmstrong/nodepub/issues"
   },
@@ -66,6 +65,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "example": "npm run build && npm run example:build && node --trace-uncaught lib/example.js",
     "example:build": "tsc -p tsconfig.example.json",
     "lint": "npm run prettier && npm run lint:src && npm run lint:example && npm run lint:test",
