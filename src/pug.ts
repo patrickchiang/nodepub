@@ -1,9 +1,10 @@
 import pug from 'pug';
 
+import { resolve } from 'node:path';
 import type { Data, Section } from './types.js';
 
 const { url } = import.meta;
-const getPath = (path: string) => new URL(path, url).pathname;
+const getPath = (path: string) => resolve(new URL(path, url).pathname);
 
 const options = {
   doctype: 'xml',
