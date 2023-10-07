@@ -64,14 +64,14 @@
   },
   "scripts": {
     "build": "tsc",
-    "example": "pnpm run build && pnpm run example:build && node --trace-uncaught example/example.js",
+    "example": "npm run build && npm run example:build && node --trace-uncaught lib/example.js",
     "example:build": "tsc -p tsconfig.example.json",
-    "lint": "pnpm run prettier && pnpm run lint:src && pnpm run lint:example && pnpm run lint:test",
+    "lint": "npm run prettier && npm run lint:src && npm run lint:example && npm run lint:test",
     "lint:example": "eslint example/example.ts --fix",
     "lint:src": "eslint src/ --fix",
     "lint:test": "eslint __tests__/ --fix",
     "prettier": "prettier --write --ignore-unknown src/ __tests__/ example/example.ts",
-    "test": "pnpm run build && node --experimental-vm-modules ./node_modules/jest/bin/jest"
+    "test": "npm run build && node --experimental-vm-modules ./node_modules/jest/bin/jest"
   },
   "type": "module",
   "version": "4.1.2"
