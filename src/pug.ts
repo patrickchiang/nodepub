@@ -1,10 +1,6 @@
 import pug from 'pug';
 
-import { resolve } from 'node:path';
 import type { Data, Section } from './types.js';
-
-const { url } = import.meta;
-const getPath = (path: string) => resolve(new URL(path, url).pathname);
 
 const options = {
   doctype: 'xml',
@@ -12,17 +8,23 @@ const options = {
 };
 
 const pugContainer = pug.compileFile(
-  getPath('../templates/container.pug'),
+  new URL('../templates/container.pug', import.meta.url).pathname,
   options,
 );
 const pugContents = pug.compileFile(
-  getPath('../templates/contents.pug'),
+  new URL('../templates/contents.pug', import.meta.url).pathname,
   options,
 );
-const pugCover = pug.compileFile(getPath('../templates/cover.pug'), options);
-const pugOpf = pug.compileFile(getPath('../templates/opf.pug'), options);
+const pugCover = pug.compileFile(
+  new URL('../templates/cover.pug', import.meta.url).pathname,
+  options,
+);
+const pugOpf = pug.compileFile(
+  new URL('../templates/opf.pug', import.meta.url).pathname,
+  options,
+);
 const pugSection = pug.compileFile(
-  getPath('../templates/section.pug'),
+  new URL('../templates/section.pug', import.meta.url).pathname,
   options,
 );
 
