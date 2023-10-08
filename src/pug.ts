@@ -1,5 +1,6 @@
 import pug from 'pug';
 
+import { readFileSync } from 'fs';
 import type { Data, Section } from './types.js';
 
 const options = {
@@ -7,24 +8,26 @@ const options = {
   pretty: true,
 };
 
-const pugContainer = pug.compileFile(
-  new URL('../templates/container.pug', import.meta.url).pathname,
+const pugContainer = pug.compile(
+  readFileSync(
+    new URL('../templates/container.pug', import.meta.url),
+  ).toString(),
   options,
 );
 const pugContents = pug.compileFile(
   new URL('../templates/contents.pug', import.meta.url).pathname,
   options,
 );
-const pugCover = pug.compileFile(
-  new URL('../templates/cover.pug', import.meta.url).pathname,
+const pugCover = pug.compile(
+  readFileSync(new URL('../templates/cover.pug', import.meta.url)).toString(),
   options,
 );
-const pugOpf = pug.compileFile(
-  new URL('../templates/opf.pug', import.meta.url).pathname,
+const pugOpf = pug.compile(
+  readFileSync(new URL('../templates/opf.pug', import.meta.url)).toString(),
   options,
 );
-const pugSection = pug.compileFile(
-  new URL('../templates/section.pug', import.meta.url).pathname,
+const pugSection = pug.compile(
+  readFileSync(new URL('../templates/section.pug', import.meta.url)).toString(),
   options,
 );
 
