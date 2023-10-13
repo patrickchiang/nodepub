@@ -1,4 +1,9 @@
 import pug from 'pug';
+import containerTemplate from '../templates/container.js';
+import contentsTemplate from '../templates/contents.js';
+import coverTemplate from '../templates/cover.js';
+import opfTemplate from '../templates/opf.js';
+import sectionTemplate from '../templates/section.js';
 
 import type { Data, Section } from './types.js';
 
@@ -7,26 +12,11 @@ const options = {
   pretty: true,
 };
 
-const pugContainer = pug.compileFile(
-  new URL('../templates/container.pug', import.meta.url).pathname,
-  options,
-);
-const pugContents = pug.compileFile(
-  new URL('../templates/contents.pug', import.meta.url).pathname,
-  options,
-);
-const pugCover = pug.compileFile(
-  new URL('../templates/cover.pug', import.meta.url).pathname,
-  options,
-);
-const pugOpf = pug.compileFile(
-  new URL('../templates/opf.pug', import.meta.url).pathname,
-  options,
-);
-const pugSection = pug.compileFile(
-  new URL('../templates/section.pug', import.meta.url).pathname,
-  options,
-);
+const pugContainer = pug.compile(containerTemplate, options);
+const pugContents = pug.compile(contentsTemplate, options);
+const pugCover = pug.compile(coverTemplate, options);
+const pugOpf = pug.compile(opfTemplate, options);
+const pugSection = pug.compile(sectionTemplate, options);
 
 // Provide the contents of the container XML file.
 const getContainer = () => pugContainer();

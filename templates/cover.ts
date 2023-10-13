@@ -1,4 +1,4 @@
--
+const template = `-
   let coverType = data.options.coverType;
 
 doctype xml
@@ -40,8 +40,10 @@ html(
     if coverType === 'image'
       img(
         alt='Cover',
-        src=`resources/${data.cover.base}`,
+        src=\`resources/\${data.cover.base}\`,
         style='height: 100%; width: 100%;'
       )
     else if coverText
       div!= coverText
+`;
+export default template;

@@ -1,16 +1,16 @@
-mixin resources(resources)
+const template = `mixin resources(resources)
   each resource, i in resources
     if resource.properties
       item(
-        href=`resources/${resource.base}`,
-        id=`img${i}`,
+        href=\`resources/\${resource.base}\`,
+        id=\`img\${i}\`,
         media-type=resource.type
         properties=resource.properties
       )
     else
       item(
-        href=`resources/${resource.base}`,
-        id=`img${i}`,
+        href=\`resources/\${resource.base}\`,
+        id=\`img\${i}\`,
         media-type=resource.type
       )
 
@@ -128,8 +128,8 @@ package(
 
     each section in sections
       item(
-        href=`content/${section.filename}`,
-        id=`s${section.index}`,
+        href=\`content/\${section.filename}\`,
+        id=\`s\${section.index}\`,
         media-type='application/xhtml+xml'
       )
 
@@ -151,7 +151,7 @@ package(
     each section in sections
       if section.isFrontMatter
         itemref(
-          idref=`s${section.index}`
+          idref=\`s\${section.index}\`
         )
 
     if showContents
@@ -162,7 +162,7 @@ package(
     each section in sections
       unless section.isFrontMatter
         itemref(
-          idref=`s${section.index}`
+          idref=\`s\${section.index}\`
         )
 
   if showContents
@@ -172,3 +172,5 @@ package(
         title='Contents',
         type='toc'
       )
+`;
+export default template;

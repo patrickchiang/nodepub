@@ -1,4 +1,4 @@
-doctype xml
+const template = `doctype xml
 html(
   xmlns:epub='http://www.idpf.org/2007/ops',
   xmlns='http://www.w3.org/1999/xhtml'
@@ -31,8 +31,10 @@ html(
           each section in data.sections
               unless section.excludeFromContents
                 li(
-                  id=`toc-${section.filename}`
+                  id=\`toc-\${ section.filename } \`
                 )
                   a(
                     href=section.filename
                   )= section.title
+`;
+export default template;

@@ -1,4 +1,4 @@
-doctype xml
+const template = `doctype xml
 html(
   xml:lang=data.metadata.language,
   xmlns:epub='http://www.idpf.org/2007/ops',
@@ -17,5 +17,7 @@ html(
 
   body
     div(
-      id=`s${section.index}`
+      id=\`s\${ section.index }\`
     )!= content
+`;
+export default template;
