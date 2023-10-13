@@ -31,7 +31,7 @@ html(
           each section in data.sections
               unless section.excludeFromContents
                 li(
-                  id=\`toc-\${ section.filename } \`
+                  id=\`toc-\${section.filename}\`
                 )
                   a(
                     href=section.filename
