@@ -2,7 +2,7 @@
   "author": "Dylan Armstrong <dylan@dylan.is>",
   "main": "./lib/index.js",
   "bugs": {
-    "url": "https://github.com/dylanarmstrong/nodepub/issues"
+    "url": "https://github.com/jamiemill/nodepub/issues"
   },
   "dependencies": {
     "@dylanarmstrong/eslint-config": "^0.4.0",
@@ -47,13 +47,13 @@
     "./lib/",
     "./templates/"
   ],
-  "homepage": "https://github.com/dylanarmstrong/nodepub",
+  "homepage": "https://github.com/jamiemill/nodepub",
   "keywords": [
     "epub",
     "ebook"
   ],
   "license": "MIT",
-  "name": "@dylanarmstrong/nodepub",
+  "name": "@jamiemill/nodepub",
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
@@ -61,7 +61,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/dylanarmstrong/nodepub"
+    "url": "https://github.com/jamiemill/nodepub"
   },
   "scripts": {
     "build": "tsc",
