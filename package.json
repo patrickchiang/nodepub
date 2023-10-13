@@ -44,8 +44,7 @@
   },
   "exports": "./lib/index.js",
   "files": [
-    "./lib/",
-    "./templates/"
+    "./lib/"
   ],
   "homepage": "https://github.com/jamiemill/nodepub",
   "keywords": [

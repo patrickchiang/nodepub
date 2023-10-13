@@ -1,9 +1,9 @@
 import pug from 'pug';
-import containerTemplate from '../templates/container.js';
-import contentsTemplate from '../templates/contents.js';
-import coverTemplate from '../templates/cover.js';
-import opfTemplate from '../templates/opf.js';
-import sectionTemplate from '../templates/section.js';
+import containerTemplate from './templates/container.js';
+import contentsTemplate from './templates/contents.js';
+import coverTemplate from './templates/cover.js';
+import opfTemplate from './templates/opf.js';
+import sectionTemplate from './templates/section.js';
 
 import type { Data, Section } from './types.js';
 
