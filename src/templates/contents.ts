@@ -22,6 +22,18 @@ html(
       header
         h1= data.metadata.contents
 
+      unless !data.options.startReading
+        nav(
+          epub:type='landmarks',
+          hidden=''
+        )
+          ol
+            li
+              a(
+                epub:type='bodymatter',
+                href=data.sections.find(section => !section.excludeFromContents && !section.isFrontMatter).filename
+              ) Start of Content
+
       nav(
         epub:type='toc',
         id='toc',

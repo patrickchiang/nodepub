@@ -49,6 +49,7 @@ type Metadata = BaseMetadata &
 type Options = Partial<{
   coverType: CoverType;
   showContents: boolean;
+  startReading: boolean;
 }>;
 
 type Data = {

@@ -5,6 +5,7 @@ import type { Options, Metadata, Section } from './types.js';
 const defaultOptions: Required<Options> = {
   coverType: 'image',
   showContents: true,
+  startReading: true,
 };
 
 const date = new Date();

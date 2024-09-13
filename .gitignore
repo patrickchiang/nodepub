@@ -3,3 +3,6 @@ coverage/
 example/example.js
 lib/
 node_modules/
+package-lock.json
+example/example-conversionLog.csv
+example/example.epub
