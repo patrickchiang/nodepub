@@ -22,18 +22,6 @@ html(
       header
         h1= data.metadata.contents
 
-      unless !data.options.startReading
-        nav(
-          epub:type='landmarks',
-          hidden=''
-        )
-          ol
-            li
-              a(
-                epub:type='bodymatter',
-                href=data.sections.find(section => !section.excludeFromContents && !section.isFrontMatter).filename
-              ) Start of Content
-
       nav(
         epub:type='toc',
         id='toc',
@@ -48,5 +36,23 @@ html(
                   a(
                     href=section.filename
                   )= section.title
+
+      unless !data.options.startReading
+        nav(
+          epub:type='landmarks',
+          id='landmarks',
+          hidden=''
+        )
+          ol
+            li
+              a(
+                epub:type='toc',
+                href='toc.xhtml'
+              ) Table of Contents
+            li
+              a(
+                epub:type='bodymatter',
+                href=data.sections.find(section => !section.excludeFromContents && !section.isFrontMatter).filename
+              ) Start of Content
 `;
 export default template;
