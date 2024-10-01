@@ -17,6 +17,7 @@ import {
   getSection,
 } from './pug.js';
 import { addResourceDetails, makeFolder, uniqueResources } from './utils.js';
+import JSZip from 'jszip';
 
 class Epub {
   data: Data;
@@ -191,6 +192,18 @@ class Epub {
       // Done.
       archive.finalize();
     });
+  }
+
+  async buffer() {
+    const archive = new JSZip();
+    const files = this.getFiles();
+
+    files.forEach((file) => {
+      const filePath = file.folder.length > 0 ? `${file.folder}/${file.name}` : file.name;
+      archive.file(filePath, file.content, { compression: file.compress ? "DEFLATE" : "STORE" });
+    });
+
+    return archive.generateAsync({ type: 'nodebuffer' });
   }
 }
 

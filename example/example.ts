@@ -172,6 +172,8 @@ const epub = new Epub({
     // eslint-disable-next-line no-console
     console.log('Generating a stand-alone EPUB.');
     await epub.write('example', 'example.epub');
+
+    await epub.buffer();
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
