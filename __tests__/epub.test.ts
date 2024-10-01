@@ -98,7 +98,7 @@ body { margin: 5px; }`,
         genre: 'Non-Fiction',
         id: '1234',
         language: 'en',
-        modified: '2023-06-02T22:00:00Z',
+        modified: '2023-06-03T07:00:00Z',
         published: '1992-06-17',
         publisher: 'My Fake Publisher',
         sequence: 1,
@@ -110,6 +110,7 @@ body { margin: 5px; }`,
       options: {
         coverType: 'image',
         showContents: true,
+        startReading: true,
       },
       resources: [
         {

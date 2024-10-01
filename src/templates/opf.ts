@@ -133,12 +133,13 @@ package(
         media-type='application/xhtml+xml'
       )
 
-    item(
-      href='content/toc.xhtml',
-      id='toc',
-      media-type='application/xhtml+xml',
-      properties='nav'
-    )
+    if showContents
+      item(
+        href='content/toc.xhtml',
+        id='toc',
+        media-type='application/xhtml+xml',
+        properties='nav'
+      )
 
     +resources(data.resources)
 

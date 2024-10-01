@@ -146,7 +146,7 @@ const metadata = {
 
 const options = {
   coverType: 'image' as const,
-  showContents: true,
+  showContents: false,
   startReading: true,
 };
 
