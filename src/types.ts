@@ -8,6 +8,7 @@ type Section = {
   filename: string;
   index: number;
   isFrontMatter: boolean;
+  isBackMatter: boolean;
 }>;
 
 type Resource = {
@@ -48,6 +49,8 @@ type Metadata = BaseMetadata &
 
 type Options = Partial<{
   coverType: CoverType;
+  overrideFrontmatterTitle: string;
+  overrideBackmatterTitle: string;
   showContents: boolean;
   startReading: boolean;
 }>;

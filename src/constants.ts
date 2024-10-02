@@ -4,6 +4,8 @@ import type { Options, Metadata, Section } from './types.js';
 
 const defaultOptions: Required<Options> = {
   coverType: 'image',
+  overrideBackmatterTitle: 'Additional Reading',
+  overrideFrontmatterTitle: 'Book Information',
   showContents: true,
   startReading: true,
 };
@@ -39,6 +41,7 @@ const defaultSection: Required<Section> = {
   excludeFromContents: false,
   filename: '',
   index: 0,
+  isBackMatter: false,
   isFrontMatter: false,
   title: '',
 };

@@ -161,7 +161,13 @@ package(
       )
 
     each section in sections
-      unless section.isFrontMatter
+      unless section.isFrontMatter || section.isBackMatter
+        itemref(
+          idref=\`s\${section.index}\`
+        )
+
+    each section in sections
+      if section.isBackMatter
         itemref(
           idref=\`s\${section.index}\`
         )

@@ -28,14 +28,38 @@ html(
         xmlns:epub='http://www.idpf.org/2007/ops'
       )
         ol
+          li(class='frontmatter')
+            span(class='frontmatter')=data.options.overrideFrontmatterTitle
+            ol(class='frontmatter')
+              each section in data.sections
+                  if section.isFrontMatter
+                    unless section.excludeFromContents
+                      li(
+                        id=\`toc-\${section.filename}\`
+                      )
+                        a(
+                          href=section.filename
+                        )= section.title
           each section in data.sections
-              unless section.excludeFromContents
+              unless section.excludeFromContents || section.isFrontMatter || section.isBackMatter
                 li(
                   id=\`toc-\${section.filename}\`
                 )
                   a(
                     href=section.filename
                   )= section.title
+          li(class='backmatter')
+            span(class='backmatter')=data.options.overrideBackmatterTitle
+            ol(class='backmatter')
+              each section in data.sections
+                  if section.isBackMatter
+                    unless section.excludeFromContents
+                      li(
+                        id=\`toc-\${section.filename}\`
+                      )
+                        a(
+                          href=section.filename
+                        )= section.title
 
       unless !data.options.startReading
         nav(

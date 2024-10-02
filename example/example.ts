@@ -112,6 +112,7 @@ const sections = [
   },
   {
     content: more,
+    isBackMatter: true,
     title: 'More Books to Read',
   },
   {
@@ -146,7 +147,7 @@ const metadata = {
 
 const options = {
   coverType: 'image' as const,
-  showContents: false,
+  showContents: true,
   startReading: true,
 };
 
