@@ -18,6 +18,7 @@ html(
   body
     div(
       id=\`s\${ section.index }\`
+      class='content-page'
     )!= content
 `;
 export default template;
