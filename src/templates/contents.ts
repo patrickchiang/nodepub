@@ -76,7 +76,7 @@ html(
             li
               a(
                 epub:type='bodymatter',
-                href=data.sections.find(section => !section.excludeFromContents && !section.isFrontMatter).filename
+                href=data.sections.find(section => !section.isFrontMatter).filename
               ) Start of Content
 `;
 export default template;
