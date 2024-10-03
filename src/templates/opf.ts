@@ -54,6 +54,26 @@ package(
       refines='#title'
     )='main'
 
+    meta(
+      property='schema:accessMode'
+    )='textual'
+
+    meta(
+      property='schema:accessibilityFeature'
+    )='alternativeText'
+
+    meta(
+      property='schema:accessibilityHazard'
+    )='none'
+
+    meta(
+      property='schema:accessModeSufficient'
+    )='textual'
+
+    meta(
+      property='schema:accessibilitySummary'
+    )='This publication meets accessibility standards.'
+
     dc:language=data.metadata.language
     dc:identifier(
       id='pub-id'

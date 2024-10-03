@@ -1,7 +1,8 @@
 const template = `doctype xml
 html(
   xmlns:epub='http://www.idpf.org/2007/ops',
-  xmlns='http://www.w3.org/1999/xhtml'
+  xmlns='http://www.w3.org/1999/xhtml',
+  xml:lang=data.metadata.language
 )
   head
     title= data.metadata.contents
@@ -16,8 +17,10 @@ html(
 
   body
     section(
-      class='frontmatter'
-      epub:type='frontmatter toc'
+      class='frontmatter',
+      epub:type='frontmatter toc',
+      aria-label='Table of Contents',
+      role='doc-toc'
     )
       header
         h1= data.metadata.contents
@@ -25,7 +28,8 @@ html(
       nav(
         epub:type='toc',
         id='toc',
-        xmlns:epub='http://www.idpf.org/2007/ops'
+        xmlns:epub='http://www.idpf.org/2007/ops',
+        role="doc-toc"
       )
         ol
           li(class='frontmatter')
